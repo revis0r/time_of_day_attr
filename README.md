@@ -41,6 +41,18 @@ TimeOfDayAttr.l(business_hour.opening, omit_minutes_at_full_hour: true)
  => '9'
 ```
 
+You can pass callback function to additional processing of value:
+```ruby
+class TimeSlot < ActiveRecord::Base
+  time_of_day_attr :in, :out, callback: ->(attr, value) { attr.eql?(:out) && value.zero? ? 24*3600 : value }
+  time_of_day_attr :from, :to, callback: :process_values
+
+  def process_values(attr, value)
+    attr.eql?(:to) && value == 0 ? 24*3600 : value
+  end
+end
+```
+
 ### Formats
 
 The standard formats for conversion are 'default' and 'hour'.

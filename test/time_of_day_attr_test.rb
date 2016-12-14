@@ -68,4 +68,23 @@ class TimeOfDayAttrTest < ActiveSupport::TestCase
     assert_equal '24', TimeOfDayAttr.localize(business_hour.closing, omit_minutes_at_full_hour: true)
   end
 
+  test 'lambda callback should work' do
+    time_slot = TimeSlot.new(in: '0', out: '00:00 am')
+    assert_equal 0, time_slot.in
+    assert_equal 86400, time_slot.out
+
+    time_slot2 = TimeSlot.new(in: '9', out: '9')
+    assert_equal 32400, time_slot2.in
+    assert_equal 32400, time_slot2.out
+  end
+
+  test 'function lambda should work' do
+    time_slot = TimeSlot.new(from: '0', to: '00:00 am')
+    assert_equal 0, time_slot.from
+    assert_equal 86400, time_slot.to
+
+    time_slot2 = TimeSlot.new(from: '9', to: '9')
+    assert_equal 32400, time_slot2.from
+    assert_equal 32400, time_slot2.to
+  end
 end
